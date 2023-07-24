@@ -140,6 +140,17 @@ Browser: http://localhost:8080
 
 kubectl port-forward -n test svc/frontend 8080:8080 --context=kind-remote2
 Browser: http://localhost:8080
+
+for ctx in kind-primary kind-remote1 kind-remote2; do
+  echo -en "\n\nLabel svc podinfo on cluster: ${ctx} .........\n"
+  kubectl label svc -n test podinfo mirror.linkerd.io/exported=true --context=${ctx}
+  sleep 4
+
+  echo "Check services transConnected (if word exists )....on cluster ${ctx}"
+  kubectl get svc -n test --context=${ctx}
+
+done
+
 ```
 
 
