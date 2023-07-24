@@ -7,7 +7,6 @@
 - [Docker](https://docs.docker.com/)
 - [KinD](https://kind.sigs.k8s.io/)
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/)
-- [istioctl](https://istio.io/latest/docs/setup/install/istioctl/)
 - [helm](https://helm.sh/docs/intro/install/)
 - [step](https://smallstep.com/docs/step-cli/installation)
 - [linkerd](https://linkerd.io/2.13/getting-started/#step-1-install-the-cli)
