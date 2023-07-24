@@ -1,4 +1,4 @@
-# KinD: Thanos ( Highly available Prometheus setup ) Lab multi-cluster
+# KinD: Linkerd Lab multi-cluster
 
 
 ## Requirements
@@ -8,7 +8,10 @@
 - [KinD](https://kind.sigs.k8s.io/)
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/)
 - [istioctl](https://istio.io/latest/docs/setup/install/istioctl/)
-
+- [helm](https://helm.sh/docs/intro/install/)
+- [step](https://smallstep.com/docs/step-cli/installation)
+- [linkerd](https://linkerd.io/2.13/getting-started/#step-1-install-the-cli)
+- [linkerd-smi](https://linkerd.io/2.13/tasks/linkerd-smi/#cli)
 
 Run the `setup-clusters.sh` script. It creates three KinD clusters:
 
