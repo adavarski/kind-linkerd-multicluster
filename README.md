@@ -254,10 +254,11 @@ spec:
   service: podinfo
   backends:
   - service: podinfo
-    weight: 50
-  - service: podinfo-kind-remote1
-    weight: 50
+    weight: 40
+  - service: podinfo-kind-primary
+    weight: 40
 EOF    
+
 
 kubectl --context=kind-remote1 apply -f - <<EOF
 apiVersion: split.smi-spec.io/v1alpha1
@@ -269,10 +270,26 @@ spec:
   service: podinfo
   backends:
   - service: podinfo
-    weight: 50
-  - service: podinfo-kind-primary
-    weight: 50
+    weight: 30
+  - service: podinfo-kind-remote1
+    weight: 30
 EOF    
+
+kubectl --context=kind-remote2 apply -f - <<EOF
+apiVersion: split.smi-spec.io/v1alpha1
+kind: TrafficSplit
+metadata:
+  name: podinfo
+  namespace: test
+spec:
+  service: podinfo
+  backends:
+  - service: podinfo
+    weight: 30
+  - service: podinfo-kind-remote2
+    weight: 30
+EOF
+
 
 $ kubectl port-forward -n test --context=kind-primary svc/frontend 8080
 
