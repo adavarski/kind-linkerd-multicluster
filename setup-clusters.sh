@@ -82,6 +82,6 @@ kind::cluster::add_route ${cluster_remote2[name]}  ${remote1_cidr}  ${remote1_ip
 log::msg "Deploying MetalLB inside clusters"
 
 metallb::deploy ${cluster_primary[name]} ${cluster_primary[metallb_l2pool_start]}
-metallb::deploy ${cluster_remote1[name]} ${cluster_primary[metallb_l2pool_start]}
-metallb::deploy ${cluster_remote2[name]} ${cluster_primary[metallb_l2pool_start]}
+metallb::deploy ${cluster_remote1[name]} ${cluster_remote1[metallb_l2pool_start]}
+metallb::deploy ${cluster_remote2[name]} ${cluster_remote2[metallb_l2pool_start]}
 
