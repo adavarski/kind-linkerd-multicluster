@@ -11,4 +11,4 @@ spec:
         - name: PODINFO_UI_COLOR
           value: '#007bff'
         - name: PODINFO_UI_MESSAGE
-          value: 'greetings from kind-demo'
+          value: 'greetings from kind-priamry'
