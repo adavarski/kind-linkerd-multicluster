@@ -27,12 +27,14 @@ declare -A cluster_remote1=(
   [name]=remote1
   [pod_subnet]=10.20.0.0/16
   [svc_subnet]=10.255.20.0/24
+  [metallb_l2pool_start]=10
 )
 
 declare -A cluster_remote2=(
   [name]=remote2
   [pod_subnet]=10.30.0.0/16
   [svc_subnet]=10.255.30.0/24
+  [metallb_l2pool_start]=10
 )
 
 #--------------------------------------
