@@ -105,10 +105,6 @@ CURRENT   NAME            CLUSTER         AUTHINFO        NAMESPACE
           kind-remote1    kind-remote1    kind-remote1    
 *         kind-remote2    kind-remote2    kind-remote2  
 
-```
-
-
-```
 
 mkdir certs && cd certs
 step certificate create \
@@ -155,6 +151,13 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
   printf "\n"
 done
 
+### Example output:
+Checking cluster: kind-primary .........172.24.0.61
+
+Checking cluster: kind-remote1 .........172.24.0.71
+
+Checking cluster: kind-remote2 .........172.24.0.81
+
 
 for ctx in kind-primary kind-remote1 kind-remote2; do
   echo "Checking link....${ctx}"
@@ -165,6 +168,43 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
 
   echo "..............done ${ctx}"
 done
+
+Example Output:
+Checking link....kind-primary
+linkerd-multicluster
+--------------------
+√ Link CRD exists
+√ multicluster extension proxies are healthy
+√ multicluster extension proxies are up-to-date
+√ multicluster extension proxies and cli versions match
+
+Status check results are √
+Checking gateways ...kind-primary
+CLUSTER  ALIVE    NUM_SVC      LATENCY  
+..............done kind-primary
+Checking link....kind-remote1
+linkerd-multicluster
+--------------------
+√ Link CRD exists
+√ multicluster extension proxies are healthy
+√ multicluster extension proxies are up-to-date
+√ multicluster extension proxies and cli versions match
+
+Status check results are √
+Checking gateways ...kind-remote1
+CLUSTER  ALIVE    NUM_SVC      LATENCY  
+..............done kind-remote1
+Checking link....kind-remote2
+linkerd-multicluster
+--------------------
+√ Link CRD exists
+√ multicluster extension proxies are healthy
+√ multicluster extension proxies are up-to-date
+√ multicluster extension proxies and cli versions match
+
+Status check results are √
+Checking gateways ...kind-remote2
+CLUSTER  ALIVE    NUM_SVC      LATENCY
 
 
 for ctx in kind-primary kind-remote1 kind-remote2; do
@@ -245,7 +285,7 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
   kubectl rollout status deploy -n ingress-nginx ingress-nginx-controller --context=${ctx}
 
   echo "Breeding an income for the podinfo - ${ctx}"
-  kubectl --context=${ctx} -n test create ingress frontend --class nginx --rule="frontend-${ctx}.127-0-0-1.sslip.io/*=frontend:8080" --annotation "nginx.ingress.kubernetes.io/service-upstream=true"
+  kubectl --context=${ctx} -n test create ingress frontend --class nginx --rule="frontend-${ctx}.192.168.1.100.nip.io/*=frontend:8080" --annotation "nginx.ingress.kubernetes.io/service-upstream=true"
 done
 
 
