@@ -307,8 +307,6 @@ kubectl get svc --context=kind-remote1 -n linkerd-multicluster linkerd-gateway -
 kubectl get endpoints --context=kind-primary -n test podinfo -o jsonpath='{.subsets[*].addresses[*].ip}'
 10.10.0.16 10.10.0.18
 
-
-
 kubectl --context=kind-primary apply -f - <<EOF
 apiVersion: split.smi-spec.io/v1alpha1
 kind: TrafficSplit
@@ -354,6 +352,10 @@ spec:
   - service: podinfo-kind-remote2
     weight: 30
 EOF
+
+
+kubectl get endpoints --context=kind-remote1 -n test podinfo-kind-primary -o jsonpath='{.subsets[*].addresses[*].ip}'
+kubectl get endpoints --context=kind-primary -n test podinfo-kind-remote1 -o jsonpath='{.subsets[*].addresses[*].ip}'
 
 
 $ kubectl port-forward -n test --context=kind-primary svc/frontend 8080
