@@ -28,6 +28,12 @@ Run the `setup-clusters.sh` script. It creates three KinD clusters:
 - One primary cluster (`primary`)
 - Two remotes (`remote1`, `remote2`)
 
+`kubectl` contexts are named respectively:
+
+- `kind-primary`
+- `kind-remote1`
+- `kind-remote2`
+
 ```
 Example Output:
 
@@ -131,22 +137,16 @@ metadata:
 EOF
 
 
-`kubectl` contexts are named respectively:
+```
+### Setup Linkerd multi-cluster
 
-- `kind-primary`
-- `kind-remote1`
-- `kind-remote2`
-
-
+```
 kubectl config get-contexts 
 CURRENT   NAME            CLUSTER         AUTHINFO        NAMESPACE
           kind-primary   kind-primary   kind-primary   
           kind-remote1    kind-remote1    kind-remote1    
 *         kind-remote2    kind-remote2    kind-remote2  
-```
-### Setup Linkerd multi-cluster
 
-```
 mkdir certs && cd certs
 step certificate create \
   root.linkerd.cluster.local \
@@ -193,11 +193,12 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
 done
 
 ### Example Output:
-Checking cluster: kind-primary .........172.24.0.61
+Checking cluster: kind-primary .........172.17.255.10
 
-Checking cluster: kind-remote1 .........172.24.0.71
+Checking cluster: kind-remote1 .........172.17.255.30
 
-Checking cluster: kind-remote2 .........172.24.0.81
+Checking cluster: kind-remote2 .........172.17.255.50
+
 
 
 for ctx in kind-primary kind-remote1 kind-remote2; do
