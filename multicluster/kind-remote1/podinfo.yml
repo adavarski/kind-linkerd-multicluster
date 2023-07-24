@@ -11,4 +11,4 @@ spec:
         - name: PODINFO_UI_COLOR
           value: '#6c757d'
         - name: PODINFO_UI_MESSAGE
-          value: 'greetings from kind-demo3'
+          value: 'greetings from kind-remote1'
