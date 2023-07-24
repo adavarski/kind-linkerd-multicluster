@@ -201,12 +201,12 @@ Checking cluster: kind-remote1 .........172.17.255.30
 
 Checking cluster: kind-remote2 .........172.17.255.50
 
-
-lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote1
-lk --context=kind-remote1 multicluster link --cluster-name kind-remote1 | ka - --context=kind-primary
-lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote2
-lk --context=kind-remote2 multicluster link --cluster-name kind-remote2 | ka - --context=kind-primary
-
+---------------Comment(no execute) Error: probe-gateway-kind-primary.linkerd-multicluster mirrored from cluster [kind-primary] has no endpoints--------------
+### lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote1
+### lk --context=kind-remote1 multicluster link --cluster-name kind-remote1 | ka - --context=kind-primary
+### lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote2
+### lk --context=kind-remote2 multicluster link --cluster-name kind-remote2 | ka - --context=kind-primary
+---------------Comment(no execute) Error: probe-gateway-kind-primary.linkerd-multicluster mirrored from cluster [kind-primary] has no endpoints--------------
 
 for ctx in kind-primary kind-remote1 kind-remote2; do
   echo "Checking link....${ctx}"
