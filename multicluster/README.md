@@ -6,5 +6,5 @@ laid out as follows:
 - `base` - Take the
   [podinfo](https://github.com/stefanprodan/podinfo/tree/master/kustomize)
   manifest and add namespaces.
-- `west` - Modify the color and naming.
-- `east` - Modify the color and naming.
+- `remote1` - Modify the color and naming.
+- `remote2` - Modify the color and naming.
