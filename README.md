@@ -372,3 +372,6 @@ $ kind delete cluster --name=remote2
 Deleting cluster "remote2" .
 ```
 
+### Ref:
+- Linkerd: https://linkerd.io
+- ServiceMesh: https://smi-spec.io/
