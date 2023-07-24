@@ -19,16 +19,17 @@ kind create cluster --config kind-primary.yaml
 kind create cluster --config kind-remote1.yaml
 kind create cluster --config kind-remote2.yaml
 
-docker network inspect kind -f '{{.IPAM.Config}}'
-
-docker network inspect kind -f '{{.IPAM.Config}}'
-[{172.24.0.0/16  172.24.0.1 map[]} {fc00:f853:ccd:e793::/64   map[]}]
-
 
 helm repo add metallb https://metallb.github.io/metallb --force-update
 for ctx in kind-primary kind-remote1 kind-remote2; do
  helm install metallb -n metallb-system --create-namespace metallb/metallb --kube-context=${ctx}
 done
+
+docker network inspect kind -f '{{.IPAM.Config}}'
+
+docker network inspect kind -f '{{.IPAM.Config}}'
+[{172.24.0.0/16  172.24.0.1 map[]} {fc00:f853:ccd:e793::/64   map[]}]
+
 
 kubectl --context=kind-primary apply -f - <<EOF
 apiVersion: metallb.io/v1beta1
