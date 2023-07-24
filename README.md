@@ -12,13 +12,47 @@
 - [linkerd](https://linkerd.io/2.13/getting-started/#step-1-install-the-cli)
 - [linkerd-smi](https://linkerd.io/2.13/tasks/linkerd-smi/#cli)
 
-
 ```
+### linkerd & linkerd-smi CLI install:
 curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
 curl -sL https://linkerd.github.io/linkerd-smi/install | sh
 export PATH=$PATH:/home/davar/.linkerd2/bin
+```
 
 
+### Setup k8s clusters
+
+
+Run the `setup-clusters.sh` script. It creates three KinD clusters:
+
+- One primary cluster (`primary`)
+- Two remotes (`remote1`, `remote2`)
+
+```
+Example Output:
+
+[+] Creating KinD clusters
+   ⠿ [remote2] Cluster created
+   ⠿ [remote1] Cluster created
+   ⠿ [primary] Cluster created
+[+] Adding routes to other clusters
+   ⠿ [primary] Route to 10.20.0.0/24 added
+   ⠿ [primary] Route to 10.30.0.0/24 added
+   ⠿ [remote1] Route to 10.10.0.0/24 added
+   ⠿ [remote1] Route to 10.30.0.0/24 added
+   ⠿ [remote2] Route to 10.10.0.0/24 added
+   ⠿ [remote2] Route to 10.20.0.0/24 added
+[+] Deploying MetalLB inside primary
+   ⠿ [primary] MetalLB deployed
+[+] Deploying MetalLB inside clusters
+   ⠿ [primary] MetalLB deployed
+   ⠿ [remote1] MetalLB deployed
+   ⠿ [remote2] MetalLB deployed
+```
+
+### (Alternative) KinD cluster and MetalLB setup not using setup-clusters.sh :
+
+```
 kind create cluster --config kind-primary.yaml
 kind create cluster --config kind-remote1.yaml
 kind create cluster --config kind-remote2.yaml
@@ -109,8 +143,10 @@ CURRENT   NAME            CLUSTER         AUTHINFO        NAMESPACE
           kind-primary   kind-primary   kind-primary   
           kind-remote1    kind-remote1    kind-remote1    
 *         kind-remote2    kind-remote2    kind-remote2  
+```
+### Setup Linkerd multi-cluster
 
-
+```
 mkdir certs && cd certs
 step certificate create \
   root.linkerd.cluster.local \
@@ -330,31 +366,3 @@ $ kind delete cluster --name=remote2
 Deleting cluster "remote2" .
 ```
 
-Note (WIP): We can run the `setup-clusters.sh` script. It creates three KinD clusters:
-
-- One primary cluster (`primary`)
-- Two remotes (`remote1`, `remote2`)
-
-Example Output:
-
-```
-
-[+] Creating KinD clusters
-   ⠿ [remote2] Cluster created
-   ⠿ [remote1] Cluster created
-   ⠿ [primary] Cluster created
-[+] Adding routes to other clusters
-   ⠿ [primary] Route to 10.20.0.0/24 added
-   ⠿ [primary] Route to 10.30.0.0/24 added
-   ⠿ [remote1] Route to 10.10.0.0/24 added
-   ⠿ [remote1] Route to 10.30.0.0/24 added
-   ⠿ [remote2] Route to 10.10.0.0/24 added
-   ⠿ [remote2] Route to 10.20.0.0/24 added
-[+] Deploying MetalLB inside primary
-   ⠿ [primary] MetalLB deployed
-[+] Deploying MetalLB inside clusters
-   ⠿ [primary] MetalLB deployed
-   ⠿ [remote1] MetalLB deployed
-   ⠿ [remote2] MetalLB deployed
-
-```
