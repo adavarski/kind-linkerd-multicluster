@@ -127,9 +127,19 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
 done
 
 
+for ctx in kind-primary kind-remote1 kind-remote2; do
+  echo "Check pods on cluster: ${ctx} ........."
+  kubectl get pod -n test --context=${ctx}
+done
 
+kubectl port-forward -n test svc/frontend 8080:8080 --context=kind-primary
+Browser: http://localhost:8080
 
+kubectl port-forward -n test svc/frontend 8080:8080 --context=kind-remote1
+Browser: http://localhost:8080
 
+kubectl port-forward -n test svc/frontend 8080:8080 --context=kind-remote2
+Browser: http://localhost:8080
 ```
 
 
