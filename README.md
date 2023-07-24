@@ -14,6 +14,11 @@
 
 
 ```
+curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
+curl -sL https://linkerd.github.io/linkerd-smi/install | sh
+export PATH=$PATH:/home/davar/.linkerd2/bin
+
+
 kind create cluster --config kind-primary.yaml
 kind create cluster --config kind-remote1.yaml
 kind create cluster --config kind-remote2.yaml
