@@ -143,4 +143,3 @@ $ kind delete cluster --name=remote2
 Deleting cluster "remote2" .
 ```
 
-REF: https://docs.bitnami.com/tutorials/create-multi-cluster-monitoring-dashboard-primary-grafana-prometheus/
