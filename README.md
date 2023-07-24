@@ -91,15 +91,12 @@ metadata:
   namespace: metallb-system
 EOF
 
-```
-
 
 `kubectl` contexts are named respectively:
 
 - `kind-primary`
 - `kind-remote1`
 - `kind-remote2`
-
 
 
 $ kubectl config get-contexts 
