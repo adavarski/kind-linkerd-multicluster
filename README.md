@@ -325,7 +325,7 @@ $ kind delete cluster --name=remote2
 Deleting cluster "remote2" .
 ```
 
-Note: We can run the `setup-clusters.sh` script. It creates three KinD clusters:
+Note (WIP): We can run the `setup-clusters.sh` script. It creates three KinD clusters:
 
 - One primary cluster (`primary`)
 - Two remotes (`remote1`, `remote2`)
