@@ -13,10 +13,82 @@
 - [linkerd](https://linkerd.io/2.13/getting-started/#step-1-install-the-cli)
 - [linkerd-smi](https://linkerd.io/2.13/tasks/linkerd-smi/#cli)
 
-Run the `setup-clusters.sh` script. It creates three KinD clusters:
 
-- One primary cluster (`primary`)
-- Two Istio remotes (`remote1`, `remote2`)
+```
+kind create cluster --config kind-primary.yaml
+kind create cluster --config kind-remote1.yaml
+kind create cluster --config kind-remote2.yaml
+
+docker network inspect kind -f '{{.IPAM.Config}}'
+
+
+helm repo add metallb https://metallb.github.io/metallb --force-update
+for ctx in kind-primary kind-remote1 kind-remote2; do
+ helm install metallb -n metallb-system --create-namespace metallb/metallb --kube-context=${ctx}
+done
+
+kubectl --context=kind-primary apply -f - <<EOF
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.17.0.61-172.17.0.70
+
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  labels:
+    todos: verdade
+  name: example
+  namespace: metallb-system
+EOF
+
+kubectl --context=kind-remote1 apply -f - <<EOF
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.17.0.71-172.17.0.80
+
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  labels:
+    todos: verdade
+  name: example
+  namespace: metallb-system
+EOF
+
+kubectl --context=kind-remote2 apply -f - <<EOF
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.17.0.81-172.17.0.90
+
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  labels:
+    todos: verdade
+  name: example
+  namespace: metallb-system
+EOF
+
+```
+
 
 `kubectl` contexts are named respectively:
 
@@ -25,27 +97,6 @@ Run the `setup-clusters.sh` script. It creates three KinD clusters:
 - `kind-remote2`
 
 
-Example Output:
-
-```
-
-[+] Creating KinD clusters
-   ⠿ [remote2] Cluster created
-   ⠿ [remote1] Cluster created
-   ⠿ [primary] Cluster created
-[+] Adding routes to other clusters
-   ⠿ [primary] Route to 10.20.0.0/24 added
-   ⠿ [primary] Route to 10.30.0.0/24 added
-   ⠿ [remote1] Route to 10.10.0.0/24 added
-   ⠿ [remote1] Route to 10.30.0.0/24 added
-   ⠿ [remote2] Route to 10.10.0.0/24 added
-   ⠿ [remote2] Route to 10.20.0.0/24 added
-[+] Deploying MetalLB inside primary
-   ⠿ [primary] MetalLB deployed
-[+] Deploying MetalLB inside clusters
-   ⠿ [primary] MetalLB deployed
-   ⠿ [remote1] MetalLB deployed
-   ⠿ [remote2] MetalLB deployed
 
 $ kubectl config get-contexts 
 CURRENT   NAME            CLUSTER         AUTHINFO        NAMESPACE
@@ -214,3 +265,31 @@ $ kind delete cluster --name=remote2
 Deleting cluster "remote2" .
 ```
 
+Note: We can run the `setup-clusters.sh` script. It creates three KinD clusters:
+
+- One primary cluster (`primary`)
+- Two remotes (`remote1`, `remote2`)
+
+Example Output:
+
+```
+
+[+] Creating KinD clusters
+   ⠿ [remote2] Cluster created
+   ⠿ [remote1] Cluster created
+   ⠿ [primary] Cluster created
+[+] Adding routes to other clusters
+   ⠿ [primary] Route to 10.20.0.0/24 added
+   ⠿ [primary] Route to 10.30.0.0/24 added
+   ⠿ [remote1] Route to 10.10.0.0/24 added
+   ⠿ [remote1] Route to 10.30.0.0/24 added
+   ⠿ [remote2] Route to 10.10.0.0/24 added
+   ⠿ [remote2] Route to 10.20.0.0/24 added
+[+] Deploying MetalLB inside primary
+   ⠿ [primary] MetalLB deployed
+[+] Deploying MetalLB inside clusters
+   ⠿ [primary] MetalLB deployed
+   ⠿ [remote1] MetalLB deployed
+   ⠿ [remote2] MetalLB deployed
+
+```
