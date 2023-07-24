@@ -151,6 +151,51 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
 
 done
 
+
+kubectl --context=kind-primary apply -f - <<EOF
+apiVersion: split.smi-spec.io/v1alpha1
+kind: TrafficSplit
+metadata:
+  name: podinfo
+  namespace: test
+spec:
+  service: podinfo
+  backends:
+  - service: podinfo
+    weight: 50
+  - service: podinfo-kind-remote1
+    weight: 50
+EOF    
+
+kubectl --context=kind-remote1 apply -f - <<EOF
+apiVersion: split.smi-spec.io/v1alpha1
+kind: TrafficSplit
+metadata:
+  name: podinfo
+  namespace: test
+spec:
+  service: podinfo
+  backends:
+  - service: podinfo
+    weight: 50
+  - service: podinfo-kind-primary
+    weight: 50
+EOF    
+
+$ kubectl port-forward -n test --context=kind-primary svc/frontend 8080
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx --force-update
+for ctx in kind-primary kind-remote1 kind-remote2; do
+  echo "Install ingress-nginx - ${ctx}"
+  helm install ingress-nginx -n ingress-nginx --create-namespace ingress-nginx/ingress-nginx --set controller.podAnnotations.linkerd.io/inject=enabled --kube-context=${ctx}
+  
+  echo "Wait for ingress-nginx installation to finish, 30s, wide"
+  kubectl rollout status deploy -n ingress-nginx ingress-nginx-controller --context=${ctx}
+
+  echo "Breeding an income for the podinfo - ${ctx}"
+  kubectl --context=${ctx} -n test create ingress frontend --class nginx --rule="frontend-${ctx}.127-0-0-1.sslip.io/*=frontend:8080" --annotation "nginx.ingress.kubernetes.io/service-upstream=true"
+done
+
 ```
 
 
