@@ -27,6 +27,7 @@ done
 
 docker network inspect kind -f '{{.IPAM.Config}}'
 
+Example Output:
 docker network inspect kind -f '{{.IPAM.Config}}'
 [{172.24.0.0/16  172.24.0.1 map[]} {fc00:f853:ccd:e793::/64   map[]}]
 
@@ -99,7 +100,7 @@ EOF
 - `kind-remote2`
 
 
-$ kubectl config get-contexts 
+kubectl config get-contexts 
 CURRENT   NAME            CLUSTER         AUTHINFO        NAMESPACE
           kind-primary   kind-primary   kind-primary   
           kind-remote1    kind-remote1    kind-remote1    
@@ -151,7 +152,7 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
   printf "\n"
 done
 
-### Example output:
+### Example Output:
 Checking cluster: kind-primary .........172.24.0.61
 
 Checking cluster: kind-remote1 .........172.24.0.71
