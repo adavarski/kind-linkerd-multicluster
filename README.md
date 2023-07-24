@@ -391,3 +391,4 @@ Deleting cluster "remote2" .
 ### Ref:
 - Linkerd: https://linkerd.io
 - ServiceMesh: https://smi-spec.io/
+- Credits: https://github.com/adonaicosta/linkerd-multicluster
