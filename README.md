@@ -353,6 +353,11 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
   kubectl --context=${ctx} get ingress -n test 
 done
 
+$ grep front /etc/hosts
+172.17.255.11   frontend-kind-primary.192.168.1.100.nip.io   
+172.17.255.31   frontend-kind-remote1.192.168.1.100.nip.io   
+172.17.255.51   frontend-kind-remote2.192.168.1.100.nip.io  
+
 Browser: frontend-primary.192.168.1.100.nip.io
 ```
 
