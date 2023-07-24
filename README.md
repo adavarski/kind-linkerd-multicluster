@@ -310,6 +310,8 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
   echo "Add the hostname and IP to your /etc/hosts and wait for ingress-nginx to assign IP to the ingress, about 30s"
   kubectl --context=${ctx} get ingress -n test 
 done
+
+Browser: frontend-primary.192.168.1.100.nip.io
 ```
 
 
