@@ -59,6 +59,8 @@ Example Output:
 ### (Alternative) KinD cluster and MetalLB setup not using setup-clusters.sh :
 
 ```
+Note: kind-primary.yaml & kind-remote1.yaml & kind-remote2.yaml ---> apiServerAddress: 192.168.1.100 # PUT YOUR IP ADDRESSS OF YOUR MACHINE HERE DUMMIE! ;-) 
+
 kind create cluster --config kind-primary.yaml
 kind create cluster --config kind-remote1.yaml
 kind create cluster --config kind-remote2.yaml
