@@ -21,6 +21,9 @@ kind create cluster --config kind-remote2.yaml
 
 docker network inspect kind -f '{{.IPAM.Config}}'
 
+docker network inspect kind -f '{{.IPAM.Config}}'
+[{172.24.0.0/16  172.24.0.1 map[]} {fc00:f853:ccd:e793::/64   map[]}]
+
 
 helm repo add metallb https://metallb.github.io/metallb --force-update
 for ctx in kind-primary kind-remote1 kind-remote2; do
@@ -35,7 +38,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 172.17.0.61-172.17.0.70
+  - 172.24.0.61-172.24.0.70
 
 ---
 apiVersion: metallb.io/v1beta1
@@ -55,7 +58,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 172.17.0.71-172.17.0.80
+  - 172.24.0.71-172.24.0.80
 
 ---
 apiVersion: metallb.io/v1beta1
@@ -75,7 +78,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 172.17.0.81-172.17.0.90
+  - 172.24.0.81-172.24.0.90
 
 ---
 apiVersion: metallb.io/v1beta1
