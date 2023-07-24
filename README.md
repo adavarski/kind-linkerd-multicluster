@@ -196,6 +196,11 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
   kubectl --context=${ctx} -n test create ingress frontend --class nginx --rule="frontend-${ctx}.127-0-0-1.sslip.io/*=frontend:8080" --annotation "nginx.ingress.kubernetes.io/service-upstream=true"
 done
 
+
+for ctx in kind-primary kind-remote1 kind-remote2; do
+  echo "Add the hostname and IP to your /etc/hosts and wait for ingress-nginx to assign IP to the ingress, about 30s"
+  kubectl --context=${ctx} get ingress -n test 
+done
 ```
 
 
