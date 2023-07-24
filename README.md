@@ -285,6 +285,22 @@ for ctx in kind-primary kind-remote1 kind-remote2; do
 
 done
 
+Check: 
+$ kubectl get svc --context=kind-primary -n linkerd-multicluster linkerd-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+172.17.255.10
+$ kubectl get endpoints --context=kind-remote1 -n test podinfo -o jsonpath='{.subsets[*].addresses[*].ip}'
+10.20.0.17 10.20.0.18
+$ kubectl get endpoints --context=kind-remote2 -n test podinfo -o jsonpath='{.subsets[*].addresses[*].ip}'
+10.30.0.16 10.30.0.18
+$ kubectl get endpoints --context=kind-primary -n test podinfo -o jsonpath='{.subsets[*].addresses[*].ip}'
+10.10.0.16 10.10.0.18
+
+kubectl get svc --context=kind-remote1 -n linkerd-multicluster linkerd-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+172.17.255.30
+kubectl get endpoints --context=kind-primary -n test podinfo -o jsonpath='{.subsets[*].addresses[*].ip}'
+10.10.0.16 10.10.0.18
+
+
 
 kubectl --context=kind-primary apply -f - <<EOF
 apiVersion: split.smi-spec.io/v1alpha1
