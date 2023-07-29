@@ -202,6 +202,8 @@ Checking cluster: kind-remote1 .........172.17.255.30
 Checking cluster: kind-remote2 .........172.17.255.50
 
 ---------------Comment(no execute) Error: probe-gateway-kind-primary.linkerd-multicluster mirrored from cluster [kind-primary] has no endpoints--------------
+It is an issue with the way that Kind sets up access to the API server. You need to use the --api-server-address to tell Linkerd how to access the API server. There is an example here: https://github.com/olix0r/l2-k3d-multi/blob/master/link.sh
+
 ### lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote1
 ### lk --context=kind-remote1 multicluster link --cluster-name kind-remote1 | ka - --context=kind-primary
 ### lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote2
