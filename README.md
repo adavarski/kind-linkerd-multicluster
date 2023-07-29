@@ -471,3 +471,6 @@ Deleting cluster "remote2" .
 - Linkerd: https://linkerd.io
 - ServiceMesh: https://smi-spec.io/
 - Credits: https://github.com/adonaicosta/linkerd-multicluster & https://github.com/olix0r/l2-k3d-multi/
+
+### TODO : Fix mc link and podinfo (distributing the load between the clusters) 
+
