@@ -204,11 +204,50 @@ Checking cluster: kind-remote2 .........172.17.255.50
 ---------------Comment(no execute) Error: probe-gateway-kind-primary.linkerd-multicluster mirrored from cluster [kind-primary] has no endpoints--------------
 It is an issue with the way that Kind sets up access to the API server. You need to use the --api-server-address to tell Linkerd how to access the API server. There is an example here: https://github.com/olix0r/l2-k3d-multi/blob/master/link.sh
 
+# Unfortunately, the credentials have the API server IP as addressed from
+# localhost and not the docker network, so we have to patch that up.
+
+
 ### lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote1
 ### lk --context=kind-remote1 multicluster link --cluster-name kind-remote1 | ka - --context=kind-primary
 ### lk --context=kind-primary multicluster link --cluster-name kind-primary | ka - --context=kind-remote2
 ### lk --context=kind-remote2 multicluster link --cluster-name kind-remote2 | ka - --context=kind-primary
+
 ---------------Comment(no execute) Error: probe-gateway-kind-primary.linkerd-multicluster mirrored from cluster [kind-primary] has no endpoints--------------
+
+### Link remote1 & 2 to primary
+$ docker inspect primary-control-plane|grep IPAddress
+                    "IPAddress": "172.19.0.3",
+
+$ docker ps -a
+CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                       NAMES
+ccd5df751e84   kindest/node:v1.25.3   "/usr/local/bin/entr…"   47 minutes ago   Up 46 minutes   127.0.0.1:40727->6443/tcp   remote1-control-plane
+bfb402dcac34   kindest/node:v1.25.3   "/usr/local/bin/entr…"   47 minutes ago   Up 46 minutes   127.0.0.1:46839->6443/tcp   remote2-control-plane
+024d33086509   kindest/node:v1.25.3   "/usr/local/bin/entr…"   47 minutes ago   Up 46 minutes   127.0.0.1:35679->6443/tcp   primary-control-plane
+
+$ linkerd multicluster link --context="kind-primary" --cluster-name="kind-primary" --api-server-address="https://172.19.0.3:6443"| ka - --context=kind-remote2
+secret/cluster-credentials-kind-primary configured
+link.multicluster.linkerd.io/kind-primary unchanged
+clusterrole.rbac.authorization.k8s.io/linkerd-service-mirror-access-local-resources-kind-primary unchanged
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-service-mirror-access-local-resources-kind-primary unchanged
+role.rbac.authorization.k8s.io/linkerd-service-mirror-read-remote-creds-kind-primary unchanged
+rolebinding.rbac.authorization.k8s.io/linkerd-service-mirror-read-remote-creds-kind-primary unchanged
+serviceaccount/linkerd-service-mirror-kind-primary unchanged
+deployment.apps/linkerd-service-mirror-kind-primary unchanged
+service/probe-gateway-kind-primary unchanged
+
+$ linkerd multicluster link --context="kind-primary" --cluster-name="kind-primary" --api-server-address="https://172.19.0.3:6443"| ka - --context=kind-remote1
+secret/cluster-credentials-kind-primary configured
+link.multicluster.linkerd.io/kind-primary unchanged
+clusterrole.rbac.authorization.k8s.io/linkerd-service-mirror-access-local-resources-kind-primary unchanged
+clusterrolebinding.rbac.authorization.k8s.io/linkerd-service-mirror-access-local-resources-kind-primary unchanged
+role.rbac.authorization.k8s.io/linkerd-service-mirror-read-remote-creds-kind-primary unchanged
+rolebinding.rbac.authorization.k8s.io/linkerd-service-mirror-read-remote-creds-kind-primary unchanged
+serviceaccount/linkerd-service-mirror-kind-primary unchanged
+deployment.apps/linkerd-service-mirror-kind-primary unchanged
+service/probe-gateway-kind-primary unchanged
+
+### Check
 
 for ctx in kind-primary kind-remote1 kind-remote2; do
   echo "Checking link....${ctx}"
@@ -237,25 +276,54 @@ Checking link....kind-remote1
 linkerd-multicluster
 --------------------
 √ Link CRD exists
+√ Link resources are valid
+	* kind-primary
+√ remote cluster access credentials are valid
+	* kind-primary
+√ clusters share trust anchors
+	* kind-primary
+√ service mirror controller has required permissions
+	* kind-primary
+√ service mirror controllers are running
+	* kind-primary
+√ probe services able to communicate with all gateway mirrors
+	* kind-primary
 √ multicluster extension proxies are healthy
 √ multicluster extension proxies are up-to-date
 √ multicluster extension proxies and cli versions match
 
 Status check results are √
 Checking gateways ...kind-remote1
-CLUSTER  ALIVE    NUM_SVC      LATENCY  
+CLUSTER       ALIVE    NUM_SVC      LATENCY  
+kind-primary  True           0          2ms  
 ..............done kind-remote1
 Checking link....kind-remote2
 linkerd-multicluster
 --------------------
 √ Link CRD exists
+√ Link resources are valid
+	* kind-primary
+√ remote cluster access credentials are valid
+	* kind-primary
+√ clusters share trust anchors
+	* kind-primary
+√ service mirror controller has required permissions
+	* kind-primary
+√ service mirror controllers are running
+	* kind-primary
+√ probe services able to communicate with all gateway mirrors
+	* kind-primary
 √ multicluster extension proxies are healthy
 √ multicluster extension proxies are up-to-date
 √ multicluster extension proxies and cli versions match
 
 Status check results are √
 Checking gateways ...kind-remote2
-CLUSTER  ALIVE    NUM_SVC      LATENCY
+CLUSTER       ALIVE    NUM_SVC      LATENCY  
+kind-primary  True           0          1ms  
+..............done kind-remote2
+
+$ for c in kind-primary kind-remote1 kind-remote2 ; do lk --context="$c" mc check;done
 
 
 for ctx in kind-primary kind-remote1 kind-remote2; do
