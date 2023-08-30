@@ -1,4 +1,4 @@
-# KinD: Linkerd multi-cluster LAB
+# (WIP) KinD: Linkerd multi-cluster LAB
 
 
 ## Requirements
